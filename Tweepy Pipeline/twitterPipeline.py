@@ -1,5 +1,6 @@
 import tweepy
 import configparser
+import pandas as pd
 
 #read all of the credentialss
 
@@ -22,5 +23,23 @@ tweets_access_api = tweepy.API(authentication)
 #we will use api to have access to twitter account
 public_tweets = tweets_access_api.home_timeline()
 
-#print all accessible home tweets
-print(public_tweets)
+#Searching tweets by hashtag
+tweet_hashtag = '#TheWifeShowMax'
+number_of_hashtag_tweets = 300
+
+tweets = tweepy.Cursor(tweets_access_api.search_tweets, q = tweet_hashtag , count = 200, tweet_mode = 'extended').items(number_of_hashtag_tweets)
+
+#Creating the dataframe with pandas
+columns = ['Tweet']
+data = []
+
+
+
+#Adding tweets to the datafram
+for tweet in tweets:
+    data.append([tweet.full_text])
+
+data_frame = pd.DataFrame(data, columns=columns)
+
+#Displaying the tweets
+print(data_frame)
